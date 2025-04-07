@@ -63,7 +63,17 @@ const JobDetails = () => {
       return toast.error('Offer a deadline within deadline')
     }
 
-    const bidData = { jobId, price, email, comment, deadLine, title: job.title, category: job.category, status: 'Pending' }
+    const bidData = {
+      jobId,
+      price,
+      email,
+      comment,
+      deadLine,
+      title: job.title,
+      category: job.category,
+      status: 'Pending',
+      buyer: buyer?.email,
+    }
 
 
     try {

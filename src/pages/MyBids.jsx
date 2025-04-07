@@ -2,6 +2,7 @@ import axios from "axios"
 import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../providers/AuthProvider"
 import BidTableRow from "../components/BidTableRow";
+import toast from "react-hot-toast";
 
 const MyBids = () => {
   const { user } = useContext(AuthContext);
@@ -12,18 +13,33 @@ const MyBids = () => {
   }, [user])
 
   const fetchAllBids = async () => {
-    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/bids?email=${user.email}`)
+    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/bids/${user.email}`)
     setBids(data);
   }
 
 
+  const handleStatusChange = async (id, prevStatus, status) => {
+    if (prevStatus !== 'In Progress') {
+      return toast.error('Not Allowed')
+    }
+
+    try {
+      const { data } = await axios.patch(`${import.meta.env.VITE_API_URL}/bid-status-update/${id}`, { status })
+      console.log(data);
+      // refresh ui
+      fetchAllBids();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <section className='container px-4 mx-auto my-12'>
-      <div className='flex items-center gap-x-3'>
-        <h2 className='text-lg font-medium text-gray-800 '>My Bids</h2>
+      <div className='flex items-center gap-x-3 '>
+        <h2 className='text-xl font-medium text-gray-800 '>My Bids</h2>
 
-        <span className='px-3 py-1 text-xs text-blue-600 bg-blue-100 rounded-full '>
-          6 Bid
+        <span className='px-3 py-1 text-md text-blue-600 bg-blue-100 rounded-full  flex items-center'>
+          {bids.length} Bid
         </span>
       </div>
 
@@ -80,7 +96,7 @@ const MyBids = () => {
                 </thead>
                 <tbody className='bg-white divide-y divide-gray-200 '>
                   {
-                    bids.map(bid => <BidTableRow key={bid._id} bid={bid} />)
+                    bids.map(bid => <BidTableRow handleStatusChange={handleStatusChange} key={bid._id} bid={bid} />)
                   }
                 </tbody>
               </table>

@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 
-const BidTableRow = ({ bid }) => {
-    const { title, deadLine, price, category, status } = bid || {};
+const BidTableRow = ({ bid, handleStatusChange }) => {
+    const { _id, title, deadLine, price, category, status } = bid || {};
 
     return (
         <tr>
@@ -10,7 +10,7 @@ const BidTableRow = ({ bid }) => {
             </td>
 
             <td className='px-4 py-4 text-sm text-gray-500  whitespace-nowrap'>
-                {format(new Date(deadLine) ,'P')}
+                {format(new Date(deadLine), 'P')}
             </td>
 
             <td className='px-4 py-4 text-sm text-gray-500  whitespace-nowrap'>
@@ -32,13 +32,15 @@ const BidTableRow = ({ bid }) => {
                     <span
                         className={`h-1.5 w-1.5 rounded-full bg-yellow-500 `}
                     ></span>
-                    <h2 className='text-sm font-normal '>{status && status}</h2>
+                    <h2 className='text-sm font-normal'>{status && status}</h2>
                 </div>
             </td>
             <td className='px-4 py-4 text-sm whitespace-nowrap'>
                 <button
+                    onClick={() => handleStatusChange(_id, status, 'Complete')}
+                    disabled={status !== 'In Progress'}
                     title='Mark Complete'
-                    className='text-gray-500 transition-colors duration-200   hover:text-red-500 focus:outline-none disabled:cursor-not-allowed'
+                    className='disabled:hover:cursor-not-allowed  text-gray-500 transition-colors duration-200   hover:text-red-500 focus:outline-none disabled:cursor-not-allowed'
                 >
                     <svg
                         xmlns='http://www.w3.org/2000/svg'
