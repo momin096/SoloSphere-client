@@ -26,6 +26,7 @@ const BidRequests = () => {
     try {
       const { data } = await axios.patch(`${import.meta.env.VITE_API_URL}/bid-status-update/${id}`, { status })
       console.log(data);
+      toast.success(`Status changed to ${status}`)
       // refresh ui
       fetchBids()
     } catch (err) {
@@ -139,6 +140,7 @@ const BidRequests = () => {
                           {/* Accept Button */}
                           <button
                             onClick={() => handleStatusChange(bid._id, bid.status, 'In Progress')}
+                            disabled={bid.status === 'In Progress' || bid.status === 'Complete'}
                             className='disabled:cursor-not-allowed text-gray-500 transition-colors duration-200   hover:text-red-500 focus:outline-none'>
                             <svg
                               xmlns='http://www.w3.org/2000/svg'
@@ -158,6 +160,7 @@ const BidRequests = () => {
                           {/* Reject Button */}
                           <button
                             onClick={() => handleStatusChange(bid._id, bid.status, 'Rejected')}
+                            disabled={bid.status === 'In Progress' || bid.status === 'Complete'}
                             className='disabled:cursor-not-allowed text-gray-500 transition-colors duration-200   hover:text-yellow-500 focus:outline-none'>
                             <svg
 
