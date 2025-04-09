@@ -4,17 +4,19 @@ import { useEffect } from "react"
 import { AuthContext } from "../providers/AuthProvider";
 import { format } from 'date-fns'
 import toast from "react-hot-toast";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 
 const BidRequests = () => {
   const { user } = useContext(AuthContext);
   const [bids, setBids] = useState([]);
+  const axiosSecure = useAxiosSecure();
   useEffect(() => {
     fetchBids();
   }, [user])
 
   const fetchBids = async () => {
-    const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/bids/${user.email}?buyer=true`)
+    const { data } = await axiosSecure.get(`/bids/${user.email}?buyer=true`)
     setBids(data)
   }
 
